@@ -37,7 +37,7 @@ export function consumersCreate(
   client: StreamSDKCore,
   security: operations.CreateConsumerApiV2ConsumersPostSecurity,
   request: models.ConsumerCreate,
-  options?: RequestOptions,
+  options?: RequestOptions
 ): APIPromise<
   Result<
     models.ConsumerResponse,
@@ -52,19 +52,14 @@ export function consumersCreate(
     | SDKValidationError
   >
 > {
-  return new APIPromise($do(
-    client,
-    security,
-    request,
-    options,
-  ));
+  return new APIPromise($do(client, security, request, options));
 }
 
 async function $do(
   client: StreamSDKCore,
   security: operations.CreateConsumerApiV2ConsumersPostSecurity,
   request: models.ConsumerCreate,
-  options?: RequestOptions,
+  options?: RequestOptions
 ): Promise<
   [
     Result<
@@ -79,13 +74,13 @@ async function $do(
       | UnexpectedClientError
       | SDKValidationError
     >,
-    APICall,
+    APICall
   ]
 > {
   const parsed = safeParse(
     request,
     (value) => z.parse(models.ConsumerCreate$outboundSchema, value),
-    "Input validation failed",
+    "Input validation failed"
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
@@ -95,10 +90,12 @@ async function $do(
 
   const path = pathToFunc("/api/v2/consumers")();
 
-  const headers = new Headers(compactMap({
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  }));
+  const headers = new Headers(
+    compactMap({
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    })
+  );
 
   const requestSecurity = resolveSecurity(
     [
@@ -114,7 +111,7 @@ async function $do(
         type: "apiKey:header",
         value: security?.apiKey,
       },
-    ],
+    ]
   );
 
   const context = {
@@ -126,22 +123,25 @@ async function $do(
     resolvedSecurity: requestSecurity,
 
     securitySource: security,
-    retryConfig: options?.retries
-      || client._options.retryConfig
-      || { strategy: "none" },
+    retryConfig: options?.retries ||
+      client._options.retryConfig || { strategy: "none" },
     retryCodes: options?.retryCodes || ["429", "500", "502", "503", "504"],
   };
 
-  const requestRes = client._createRequest(context, {
-    security: requestSecurity,
-    method: "POST",
-    baseURL: options?.serverURL,
-    path: path,
-    headers: headers,
-    body: body,
-    userAgent: client._options.userAgent,
-    timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
-  }, options);
+  const requestRes = client._createRequest(
+    context,
+    {
+      security: requestSecurity,
+      method: "POST",
+      baseURL: options?.serverURL,
+      path: path,
+      headers: headers,
+      body: body,
+      userAgent: client._options.userAgent,
+      timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
+    },
+    options
+  );
   if (!requestRes.ok) {
     return [requestRes, { status: "invalid" }];
   }
@@ -177,7 +177,7 @@ async function $do(
     M.json(200, models.ConsumerResponse$inboundSchema),
     M.jsonErr(422, errors.HTTPValidationError$inboundSchema),
     M.fail("4XX"),
-    M.fail("5XX"),
+    M.fail("5XX")
   )(response, req, { extraFields: responseFields });
   if (!result.ok) {
     return [result, { status: "complete", request: req, response }];
