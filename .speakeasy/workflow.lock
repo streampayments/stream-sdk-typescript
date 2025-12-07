@@ -1,0 +1,37 @@
+speakeasyVersion: 1.669.2
+sources:
+    Stream App:
+        sourceNamespace: stream-app
+        sourceRevisionDigest: sha256:0c8b2d155722d0d801c5e85422e52c00f34137e5e826372c27f60856b06107b6
+        sourceBlobDigest: sha256:c94213a8f82494048d2de630e4ae34ea2ec9769213cdc248dc0112657c4b22dc
+        tags:
+            - latest
+            - "2"
+targets:
+    stream-sdk:
+        source: Stream App
+        sourceNamespace: stream-app
+        sourceRevisionDigest: sha256:0c8b2d155722d0d801c5e85422e52c00f34137e5e826372c27f60856b06107b6
+        sourceBlobDigest: sha256:c94213a8f82494048d2de630e4ae34ea2ec9769213cdc248dc0112657c4b22dc
+        codeSamplesNamespace: stream-app-typescript-code-samples
+        codeSamplesRevisionDigest: sha256:90dff9293a3a31af871dc86cf07d6334f6db3532e02176c4b7e9ad633cee709d
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: latest
+    sources:
+        Stream App:
+            inputs:
+                - location: ../../../../Desktop/api.json
+            output: .speakeasy/out.openapi.yaml
+            registry:
+                location: registry.speakeasyapi.dev/stream/stream/stream-app
+    targets:
+        stream-sdk:
+            target: typescript
+            source: Stream App
+            codeSamples:
+                registry:
+                    location: registry.speakeasyapi.dev/stream/stream/stream-app-typescript-code-samples
+                labelOverride:
+                    fixedValue: Typescript (SDK)
+                blocking: false

@@ -1,0 +1,25 @@
+# SubscriptionUpdate
+
+## Example Usage
+
+```typescript
+import { SubscriptionUpdate } from "stream-sdk/models";
+
+let value: SubscriptionUpdate = {
+  items: [],
+  coupons: [
+    "<value 1>",
+    "<value 2>",
+  ],
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                             | Type                                                                                                                                                              | Required                                                                                                                                                          | Description                                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `description`                                                                                                                                                     | *string*                                                                                                                                                          | :heavy_minus_sign:                                                                                                                                                | Description of the subscription.                                                                                                                                  |
+| `items`                                                                                                                                                           | [models.SubscriptionItemCreateDto](../models/subscriptionitemcreatedto.md)[]                                                                                      | :heavy_check_mark:                                                                                                                                                | products to purchaseIf you want to keep existing items, include them in the list.                                                                                 |
+| `coupons`                                                                                                                                                         | *string*[]                                                                                                                                                        | :heavy_check_mark:                                                                                                                                                | coupons to apply to the subscription for discounts.If you want to keep existing coupons, include them in the list.                                                |
+| `untilCycleNumber`                                                                                                                                                | *number*                                                                                                                                                          | :heavy_minus_sign:                                                                                                                                                | specify how many cycles the subscription will last for  until it moves to canceled state automatically. Sending 'null' will cancel it.                            |
+| `overridePaymentMethods`                                                                                                                                          | [models.SubscriptionPaymentMethodDto](../models/subscriptionpaymentmethoddto.md)                                                                                  | :heavy_minus_sign:                                                                                                                                                | overriden payment methods for generated invoices for the payer - sending 'null' for any value means we should follow organization global settings for that method |

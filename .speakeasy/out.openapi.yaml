@@ -1,0 +1,4475 @@
+openapi: "3.1.0"
+info:
+  title: "Stream App"
+  description: "Stream App API Documentation"
+  version: "2"
+servers:
+  - url: "https://stream-app-service.streampay.sa"
+paths:
+  "/api/v2/consumers":
+    post:
+      tags:
+        - "Consumers"
+      summary: "Create Consumer"
+      description: "Create a new consumer with contact information and payment details."
+      operationId: "Create_Consumer_api_v2_consumers_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/ConsumerCreate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ConsumerResponse"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "create"
+    get:
+      tags:
+        - "Consumers"
+      summary: "Get All Consumers"
+      description: "List all consumers with pagination, filtering, and sorting options."
+      operationId: "Get_All_Consumers_api_v2_consumers_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "search_term"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            title: "Search Term"
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "created_at"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "asc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_ConsumerResponse_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "list"
+  "/api/v2/consumers/{org_consumer_id}":
+    get:
+      tags:
+        - "Consumers"
+      summary: "Get Consumer"
+      description: "Retrieve detailed information about a specific consumer by their ID."
+      operationId: "Get_Consumer_api_v2_consumers__org_consumer_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "org_consumer_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Consumer Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/BaseConsumerResponse"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "get"
+    put:
+      tags:
+        - "Consumers"
+      summary: "Update Consumer"
+      description: "Update consumer information such as contact details or payment methods."
+      operationId: "Update_Consumer_api_v2_consumers__org_consumer_id__put"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "org_consumer_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Org Consumer Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/ConsumerUpdate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/BaseConsumerResponse"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "update"
+    delete:
+      tags:
+        - "Consumers"
+      summary: "Delete Consumer"
+      description: "Delete a consumer from the organization."
+      operationId: "Delete_Consumer_api_v2_consumers__org_consumer_id__delete"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "org_consumer_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Org Consumer Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "delete"
+  "/api/v2/coupons":
+    get:
+      tags:
+        - "Coupons"
+      summary: "List Coupons"
+      description: "List all coupons with pagination, filtering, and sorting options."
+      operationId: "List_Coupons_api_v2_coupons_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "search_term"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Search by coupon name."
+            title: "Search Term"
+          description: "Search by coupon name."
+        - name: "active"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "boolean"
+              - type: "null"
+            description: "Filter by active or inactive coupons."
+            title: "Active"
+          description: "Filter by active or inactive coupons."
+        - name: "is_percentage"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "boolean"
+              - type: "null"
+            description: "Filter by percentage-based or fixed-amount coupons."
+            title: "Is Percentage"
+          description: "Filter by percentage-based or fixed-amount coupons."
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "created_at"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "desc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_CouponDetailed_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "list"
+    post:
+      tags:
+        - "Coupons"
+      summary: "Create Coupon"
+      description: "Create a new coupon with discount details and active/inactive status."
+      operationId: "Create_Coupon_api_v2_coupons_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/CouponCreate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/CouponDto"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "create"
+  "/api/v2/coupons/{coupon_id}":
+    put:
+      tags:
+        - "Coupons"
+      summary: "Update Coupon"
+      description: "Update coupon details such as discount amount or active status."
+      operationId: "Update_Coupon_api_v2_coupons__coupon_id__put"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "coupon_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Coupon Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/CouponUpdate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/CouponDto"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "update"
+    get:
+      tags:
+        - "Coupons"
+      summary: "Get Coupon"
+      description: "Retrieve detailed information about a specific coupon including redemption history."
+      operationId: "Get_Coupon_api_v2_coupons__coupon_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "coupon_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Coupon Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/CouponDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "get"
+    delete:
+      tags:
+        - "Coupons"
+      summary: "Delete Coupon"
+      description: "Delete a coupon from the organization."
+      operationId: "Delete_Coupon_api_v2_coupons__coupon_id__delete"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "coupon_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Coupon Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "delete"
+  "/api/v2/invoices/{invoice_id}":
+    get:
+      tags:
+        - "Invoices"
+      summary: "Get Invoice"
+      description: "Retrieve detailed information about a specific invoice by its ID."
+      operationId: "Get_Invoice_api_v2_invoices__invoice_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "invoice_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Invoice Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/InvoiceDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "get"
+  "/api/v2/invoices":
+    get:
+      tags:
+        - "Invoices"
+      summary: "List Invoices"
+      description: "List all invoices with pagination, filtering, and sorting options."
+      operationId: "List_Invoices_api_v2_invoices_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "filters"
+          in: "query"
+          required: true
+          schema: {"$ref": "#/components/schemas/InvoiceListFilters"}
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "invoice_number"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "asc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_InvoiceListItem_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "list"
+  "/api/v2/payments":
+    get:
+      tags:
+        - "Payments"
+      summary: "List Payments"
+      description: "List all payments for a specific invoice."
+      operationId: "List_Payments_api_v2_payments_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "invoice_id"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Invoice Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/PaymentListResponse"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "list"
+  "/api/v2/payments/{payment_id}":
+    get:
+      tags:
+        - "Payments"
+      summary: "Get Payment"
+      description: "Retrieve detailed information about a specific payment by its ID."
+      operationId: "Get_Payment_api_v2_payments__payment_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "payment_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Payment Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/PaymentResponse"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "get"
+  "/api/v2/payments/{payment_id}/refund":
+    post:
+      tags:
+        - "Payments"
+      summary: "Refund Payment"
+      description: "Process a refund for a payment."
+      operationId: "Refund_Payment_api_v2_payments__payment_id__refund_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "payment_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Payment Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/PaymentRefundRequest"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/PaymentResponse"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "refund"
+  "/api/v2/products":
+    get:
+      tags:
+        - "Products"
+      summary: "List Products"
+      description: "List all products with pagination, filtering, and sorting options."
+      operationId: "List_Products_api_v2_products_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "filters"
+          in: "query"
+          required: true
+          schema: {"$ref": "#/components/schemas/ProductListFilters"}
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "created_at"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "desc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_ProductDto_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "list"
+    post:
+      tags:
+        - "Products"
+      summary: "Create Product"
+      description: "Create a new product with pricing and description."
+      operationId: "Create_Product_api_v2_products_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/ProductCreate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ProductDto"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "create"
+  "/api/v2/products/{product_id}":
+    get:
+      tags:
+        - "Products"
+      summary: "Get Product"
+      description: "Retrieve detailed information about a specific product by its ID."
+      operationId: "Get_Product_api_v2_products__product_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "product_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Product Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ProductDto"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "get"
+    put:
+      tags:
+        - "Products"
+      summary: "Update Product"
+      description: "Update product details such as name, price, or description."
+      operationId: "Update_Product_api_v2_products__product_id__put"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "product_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Product Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/ProductUpdate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ProductDto"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "update"
+    delete:
+      tags:
+        - "Products"
+      summary: "Delete Product"
+      description: "Delete a product from the organization."
+      operationId: "Delete_Product_api_v2_products__product_id__delete"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "product_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Product Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "delete"
+  "/api/v2/subscriptions/{subscription_id}":
+    get:
+      tags:
+        - "Subscriptions"
+      summary: "Get Subscription"
+      description: "Retrieve detailed information about a specific subscription by its ID."
+      operationId: "Get_Subscription_api_v2_subscriptions__subscription_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/SubscriptionDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "get"
+    put:
+      tags:
+        - "Subscriptions"
+      summary: "Update Subscription"
+      description: "Update subscription items, coupons, description, auto-cancel cycles, or payment methods.\n\n**Important:** Updates take effect on the next invoice. Changes will not be applied to the current invoice.\n\nWhile updating the subscription, you are only allowed to update:\n- Items\n- Coupons\n- Description\n- After how many cycles the subscription auto cancel\n- Payment Methods Overrides\n\nTo change anything else, you will have to cancel and create a new subscription."
+      operationId: "Update_Subscription_api_v2_subscriptions__subscription_id__put"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/SubscriptionUpdate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/SubscriptionDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "update"
+  "/api/v2/subscriptions":
+    get:
+      tags:
+        - "Subscriptions"
+      summary: "List Subscriptions"
+      description: "List all subscriptions with pagination, filtering, and sorting options."
+      operationId: "List_Subscriptions_api_v2_subscriptions_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "filters"
+          in: "query"
+          required: true
+          schema: {"$ref": "#/components/schemas/SubscriptionListFilters"}
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "created_at"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "desc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_SubscriptionDetailed_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "list"
+    post:
+      tags:
+        - "Subscriptions"
+      summary: "Create Subscription"
+      description: "Create a new subscription with items, coupons, and payment methods."
+      operationId: "Create_Subscription_api_v2_subscriptions_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/SubscriptionCreate"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/SubscriptionDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "create"
+  "/api/v2/subscriptions/{subscription_id}/cancel":
+    post:
+      tags:
+        - "Subscriptions"
+      summary: "Cancel Subscription"
+      description: "Cancel a subscription and optionally handle related invoices."
+      operationId: "Cancel_Subscription_api_v2_subscriptions__subscription_id__cancel_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/SubscriptionCancel"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/SubscriptionDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "cancel"
+  "/api/v2/subscriptions/{subscription_id}/freeze":
+    post:
+      tags:
+        - "Subscriptions"
+      summary: "Freeze Subscription"
+      description: "Freeze a subscription to pause invoice generation for a specific period."
+      operationId: "Freeze_Subscription_api_v2_subscriptions__subscription_id__freeze_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/FreezeSubscriptionCreateRequest"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/FreezeSubscriptionBase"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "freeze"
+    get:
+      tags:
+        - "Subscriptions"
+      summary: "List Subscription Freezes"
+      description: "List all freeze periods for a specific subscription."
+      operationId: "List_Subscription_Freezes_api_v2_subscriptions__subscription_id__freeze_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "created_at"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "desc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_FreezeSubscriptionBase_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "listFreezes"
+  "/api/v2/subscriptions/{subscription_id}/freeze/{freeze_id}":
+    put:
+      tags:
+        - "Subscriptions"
+      summary: "Update Subscription Freeze"
+      description: "Update an existing subscription freeze period."
+      operationId: "Update_Subscription_Freeze_api_v2_subscriptions__subscription_id__freeze__freeze_id__put"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+        - name: "freeze_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Freeze Id"
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/FreezeSubscriptionUpdateRequest"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/FreezeSubscriptionBase"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-name-override: "updateFreeze"
+    delete:
+      tags:
+        - "Subscriptions"
+      summary: "Delete Subscription Freeze"
+      description: "Remove a freeze period from a subscription."
+      operationId: "Delete_Subscription_Freeze_api_v2_subscriptions__subscription_id__freeze__freeze_id__delete"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "subscription_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Subscription Id"
+        - name: "freeze_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Freeze Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-group: "subscriptions.freeze"
+      x-speakeasy-name-override: "delete"
+  "/api/v2/payment_links/{payment_link_id}":
+    get:
+      tags:
+        - "Payment Links"
+      summary: "Get Payment Link"
+      description: "Retrieve detailed information about a specific payment link by its ID."
+      operationId: "Get_Payment_Link_api_v2_payment_links__payment_link_id__get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "payment_link_id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            format: "uuid"
+            title: "Payment Link Id"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/PaymentLinkDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-group: "paymentLinks"
+      x-speakeasy-name-override: "get"
+  "/api/v2/payment_links":
+    post:
+      tags:
+        - "Payment Links"
+      summary: "Create Payment Link"
+      description: "Create a new payment link for collecting payments."
+      operationId: "Create_Payment_Link_api_v2_payment_links_post"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema: {"$ref": "#/components/schemas/CreatePaymentLinkDto"}
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/PaymentLinkDetailed"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-group: "payment_links"
+      x-speakeasy-name-override: "create"
+    get:
+      tags:
+        - "Payment Links"
+      summary: "List Payment Links"
+      description: "List all payment links with pagination, filtering, and sorting options."
+      operationId: "List_Payment_Links_api_v2_payment_links_get"
+      security:
+        - JWTBearer: []
+        - APIKey: []
+      parameters:
+        - name: "filters"
+          in: "query"
+          required: true
+          schema: {"$ref": "#/components/schemas/PaymentLinkListFilters"}
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Page number, defaults to 1."
+            default: 1
+            title: "Page"
+          description: "Page number, defaults to 1."
+        - name: "limit"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            exclusiveMinimum: 0
+            description: "Size of a page, defaults to 10. Maximum is 100."
+            default: 10
+            title: "Limit"
+          description: "Size of a page, defaults to 10. Maximum is 100."
+        - name: "sort_field"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+            default: "created_at"
+            title: "Sort Field"
+          description: "Field to sort by, e.g., 'amount', 'scheduled_on'"
+        - name: "sort_direction"
+          in: "query"
+          required: false
+          schema:
+            anyOf:
+              - type: "string"
+              - type: "null"
+            description: "Sorting direction ('asc' or 'desc')"
+            default: "desc"
+            title: "Sort Direction"
+          description: "Sorting direction ('asc' or 'desc')"
+      responses:
+        "200":
+          description: "Successful Response"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/ListResource_PaymentLinkDetailed_"}
+        "422":
+          description: "Validation Error"
+          content:
+            "application/json":
+              schema: {"$ref": "#/components/schemas/HTTPValidationError"}
+      x-speakeasy-group: "payment_links"
+      x-speakeasy-name-override: "list"
+components:
+  schemas:
+    "BaseConsumerResponse":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+        "email":
+          anyOf:
+            - type: "string"
+              format: "email"
+            - type: "null"
+          title: "Email"
+        "external_id":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "External Id"
+        "consumer":
+          anyOf:
+            - {"$ref": "#/components/schemas/app__consumer__v2__dtos__Consumer"}
+            - type: "null"
+        "iban":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Iban"
+        "is_deleted":
+          type: "boolean"
+          title: "Is Deleted"
+        "alias":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Alias"
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+        "branch": {"$ref": "#/components/schemas/Branch"}
+        "comment":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Comment"
+        "communication_methods":
+          items: {"$ref": "#/components/schemas/ConsumerCommunicationMethod"}
+          type: "array"
+          title: "Communication Methods"
+        "preferred_language":
+          type: "string"
+          title: "Preferred Language"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+        - "is_deleted"
+        - "created_at"
+        - "branch"
+        - "communication_methods"
+        - "preferred_language"
+      title: "BaseConsumerResponse"
+    "Branch":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+      title: "Branch"
+    "BranchDto":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+      title: "BranchDto"
+    "ConsumerCommunicationMethod":
+      type: "string"
+      enum:
+        - "WHATSAPP"
+        - "EMAIL"
+        - "SMS"
+      title: "ConsumerCommunicationMethod"
+    "ConsumerCreate":
+      properties:
+        "name":
+          type: "string"
+          title: "Name"
+          description: "Consumer name"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+          description: "Phone number"
+        "email":
+          anyOf:
+            - type: "string"
+              format: "email"
+            - type: "null"
+          title: "Email"
+          description: "Email address"
+        "external_id":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "External Id"
+          description: "External ID"
+        "iban":
+          anyOf:
+            - type: "string"
+              maxLength: 34
+              title: "IBAN"
+            - type: "null"
+          title: "Iban"
+          description: "IBAN"
+        "alias":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Alias"
+          description: "Alias"
+        "comment":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Comment"
+          description: "Comment"
+        "preferred_language":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Preferred Language"
+          description: "Preferred language"
+        "communication_methods":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/ConsumerCommunicationMethod"}
+              type: "array"
+            - type: "null"
+          title: "Communication Methods"
+          description: "Communication methods"
+      type: "object"
+      required:
+        - "name"
+      title: "ConsumerCreate"
+      description: "Consumer creation model."
+    "ConsumerResponse":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+        "email":
+          anyOf:
+            - type: "string"
+              format: "email"
+            - type: "null"
+          title: "Email"
+        "external_id":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "External Id"
+        "consumer":
+          anyOf:
+            - {"$ref": "#/components/schemas/app__consumer__v2__dtos__Consumer"}
+            - type: "null"
+        "iban":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Iban"
+        "is_deleted":
+          type: "boolean"
+          title: "Is Deleted"
+        "alias":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Alias"
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+        "branch": {"$ref": "#/components/schemas/Branch"}
+        "comment":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Comment"
+        "communication_methods":
+          items: {"$ref": "#/components/schemas/ConsumerCommunicationMethod"}
+          type: "array"
+          title: "Communication Methods"
+        "preferred_language":
+          type: "string"
+          title: "Preferred Language"
+        "last_invoice_activity":
+          anyOf:
+            - {"$ref": "#/components/schemas/LastInvoiceActivity"}
+            - type: "null"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+        - "is_deleted"
+        - "created_at"
+        - "branch"
+        - "communication_methods"
+        - "preferred_language"
+      title: "ConsumerResponse"
+    "ConsumerUpdate":
+      properties:
+        "name":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Name"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+        "email":
+          anyOf:
+            - type: "string"
+              format: "email"
+            - type: "null"
+          title: "Email"
+        "external_id":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "External Id"
+        "iban":
+          anyOf:
+            - type: "string"
+              maxLength: 34
+              title: "IBAN"
+            - type: "null"
+          title: "Iban"
+        "alias":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Alias"
+        "comment":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Comment"
+        "preferred_language":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Preferred Language"
+          description: "Preferred language"
+        "communication_methods":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/ConsumerCommunicationMethod"}
+              type: "array"
+            - type: "null"
+          title: "Communication Methods"
+      type: "object"
+      title: "ConsumerUpdate"
+      description: "Consumer update model that inherits from ConsumerCreate but makes all fields optional."
+    "ContactInformationType":
+      type: "string"
+      enum:
+        - "PHONE"
+        - "EMAIL"
+      title: "ContactInformationType"
+    "CouponCalculationMetadataDto":
+      properties:
+        "coupons":
+          items: {"$ref": "#/components/schemas/CouponMetadataDto"}
+          type: "array"
+          title: "Coupons"
+      type: "object"
+      required:
+        - "coupons"
+      title: "CouponCalculationMetadataDto"
+    "CouponCreate":
+      properties:
+        "name":
+          type: "string"
+          maxLength: 80
+          minLength: 1
+          title: "Name"
+          description: "Name of the coupon."
+        "discount_value":
+          anyOf:
+            - type: "number"
+              minimum: 0
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discount Value"
+          description: "Discount value of the coupon (either percentage or fixed)."
+        "is_percentage":
+          type: "boolean"
+          title: "Is Percentage"
+          description: "True if the discount is a percentage, False if it is a fixed amount."
+          default: false
+        "is_active":
+          type: "boolean"
+          title: "Is Active"
+          description: "Indicates if the coupon is active upon creation."
+          default: true
+      type: "object"
+      required:
+        - "name"
+        - "discount_value"
+      title: "CouponCreate"
+    "CouponDetailed":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          maxLength: 80
+          minLength: 1
+          title: "Name"
+          description: "Name of the coupon."
+        "discount_value":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discount Value"
+          description: "Discount value of the coupon (either percentage or fixed)."
+        "is_percentage":
+          type: "boolean"
+          title: "Is Percentage"
+          description: "True if the discount is a percentage, False if it is a fixed amount."
+        "is_active":
+          type: "boolean"
+          title: "Is Active"
+          description: "Indicates if the coupon is currently active."
+        "redemptions":
+          type: "integer"
+          title: "Redemptions"
+          description: "Indicates how many times this coupon has been used."
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "name"
+        - "discount_value"
+        - "is_percentage"
+        - "is_active"
+        - "redemptions"
+      title: "CouponDetailed"
+    "CouponDto":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          maxLength: 80
+          minLength: 1
+          title: "Name"
+          description: "Name of the coupon."
+        "discount_value":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discount Value"
+          description: "Discount value of the coupon (either percentage or fixed)."
+        "is_percentage":
+          type: "boolean"
+          title: "Is Percentage"
+          description: "True if the discount is a percentage, False if it is a fixed amount."
+        "is_active":
+          type: "boolean"
+          title: "Is Active"
+          description: "Indicates if the coupon is currently active."
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "name"
+        - "discount_value"
+        - "is_percentage"
+        - "is_active"
+      title: "CouponDto"
+    "CouponMetadataDto":
+      properties:
+        "coupon_id":
+          type: "string"
+          title: "Coupon Id"
+        "name":
+          type: "string"
+          title: "Name"
+        "is_percentage":
+          type: "boolean"
+          title: "Is Percentage"
+        "discount_value":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discount Value"
+        "order":
+          type: "integer"
+          title: "Order"
+        "amount_before_discount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount Before Discount"
+        "discount_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discount Amount"
+        "amount_after_discount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount After Discount"
+      type: "object"
+      required:
+        - "coupon_id"
+        - "name"
+        - "is_percentage"
+        - "discount_value"
+        - "order"
+        - "amount_before_discount"
+        - "discount_amount"
+        - "amount_after_discount"
+      title: "CouponMetadataDto"
+    "CouponUpdate":
+      properties:
+        "name":
+          anyOf:
+            - type: "string"
+              maxLength: 80
+              minLength: 1
+            - type: "null"
+          title: "Name"
+          description: "Updated name of the coupon."
+        "discount_value":
+          anyOf:
+            - type: "number"
+              minimum: 0
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Discount Value"
+          description: "Updated discount value (either percentage or fixed)."
+        "is_percentage":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Percentage"
+          description: "True if the discount is a percentage, False if it is a fixed amount."
+        "is_active":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Active"
+          description: "Whether the coupon should be active or inactive."
+      type: "object"
+      title: "CouponUpdate"
+    "CreatePaymentLinkDto":
+      properties:
+        "name":
+          type: "string"
+          title: "Name"
+        "description":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Description"
+        "items":
+          items: {"$ref": "#/components/schemas/CreatePaymentLinkItemDto"}
+          type: "array"
+          title: "Items"
+        "coupons":
+          items:
+            type: "string"
+            format: "uuid4"
+          type: "array"
+          title: "Coupons"
+        "max_number_of_payments":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Max Number Of Payments"
+          description: "Maximum number of times this payment link can be used. If null, the payment link can be used unlimited times. If organization_consumer_id is set, this number becomes how many times that specific customer can pay. Typically this should be set to 1 in that scenario."
+        "valid_until":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Valid Until"
+          description: "Datetime after which the payment link is no longer valid. If no timezone is specified, UTC is assumed."
+        "confirmation_message":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Confirmation Message"
+        "payment_methods":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentMethodDto"}
+            - type: "null"
+          description: "Configure which payment methods are available for customers to use when paying through this link. Each payment method type can be individually enabled or disabled. If null, the organization's default payment method settings will be used."
+        "custom_fields":
+          anyOf:
+            - additionalProperties: true
+              type: "object"
+            - type: "null"
+          title: "Custom Fields"
+          description: "A JSON Schema defining the custom fields."
+        "success_redirect_url":
+          anyOf:
+            - type: "string"
+              maxLength: 2000
+              minLength: 1
+              format: "uri"
+            - type: "null"
+          title: "Success Redirect Url"
+          description: "URL to redirect the payer to after a successful payment"
+        "failure_redirect_url":
+          anyOf:
+            - type: "string"
+              maxLength: 2000
+              minLength: 1
+              format: "uri"
+            - type: "null"
+          title: "Failure Redirect Url"
+          description: "URL to redirect the payer to after a failed payment"
+        "organization_consumer_id":
+          anyOf:
+            - type: "string"
+              format: "uuid"
+            - type: "null"
+          title: "Organization Consumer Id"
+          description: "ID of an existing consumer who will pay using this payment link. If set, customer information is not collected and this payment will be for that customer only. This is typically used when a specific customer is paying once. If not set, the link will collect customer information first. Use this when you expect multiple payments from different people, such as for a group trip or event."
+        "custom_metadata":
+          anyOf:
+            - additionalProperties: {"$ref": "#/components/schemas/JsonValue"}
+              type: "object"
+            - type: "null"
+          title: "Custom Metadata"
+          description: "Custom key-value metadata to be sent to payment gateway and returned in webhooks"
+        "contact_information_type":
+          anyOf:
+            - {"$ref": "#/components/schemas/ContactInformationType"}
+            - type: "null"
+          description: "Type of contact information required for payment collection (PHONE or EMAIL). Defaults to PHONE if not specified."
+      type: "object"
+      required:
+        - "name"
+        - "items"
+      title: "CreatePaymentLinkDto"
+    "CreatePaymentLinkItemDto":
+      properties:
+        "product_id":
+          type: "string"
+          format: "uuid4"
+          title: "Product Id"
+        "quantity":
+          type: "integer"
+          minimum: 1
+          title: "Quantity"
+          default: 1
+        "coupons":
+          items:
+            type: "string"
+            format: "uuid4"
+          type: "array"
+          title: "Coupons"
+      type: "object"
+      required:
+        - "product_id"
+      title: "CreatePaymentLinkItemDto"
+    "FreezeSubscriptionBase":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid"
+          title: "Id"
+        "freeze_start_datetime":
+          type: "string"
+          format: "date-time"
+          title: "Freeze Start Datetime"
+        "freeze_end_datetime":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Freeze End Datetime"
+        "notes":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Notes"
+        "subscription_id":
+          type: "string"
+          format: "uuid"
+          title: "Subscription Id"
+        "invoice_id":
+          type: "string"
+          format: "uuid"
+          title: "Invoice Id"
+        "duration":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Duration"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "freeze_start_datetime"
+        - "subscription_id"
+        - "invoice_id"
+      title: "FreezeSubscriptionBase"
+    "FreezeSubscriptionCreateRequest":
+      properties:
+        "freeze_start_datetime":
+          type: "string"
+          format: "date-time"
+          title: "Freeze Start Datetime"
+        "freeze_end_datetime":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Freeze End Datetime"
+        "notes":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Notes"
+      type: "object"
+      required:
+        - "freeze_start_datetime"
+      title: "FreezeSubscriptionCreateRequest"
+    "FreezeSubscriptionUpdateRequest":
+      properties:
+        "freeze_start_datetime":
+          type: "string"
+          format: "date-time"
+          title: "Freeze Start Datetime"
+          description: "freeze_start_datetime is always provided even if it dont change"
+        "freeze_end_datetime":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Freeze End Datetime"
+          description: "freeze_end_datetime is optional, if provided, it must be greater than freeze_start_datetime "
+        "notes":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Notes"
+      type: "object"
+      required:
+        - "freeze_start_datetime"
+        - "freeze_end_datetime"
+        - "notes"
+      title: "FreezeSubscriptionUpdateRequest"
+    "HTTPValidationError":
+      properties:
+        "detail":
+          items: {"$ref": "#/components/schemas/ValidationError"}
+          type: "array"
+          title: "Detail"
+      type: "object"
+      title: "HTTPValidationError"
+    "InvoiceBase":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "user_id":
+          type: "string"
+          format: "uuid4"
+          title: "User Id"
+        "organization_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Id"
+        "organization_consumer_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Consumer Id"
+        "account_id":
+          type: "string"
+          format: "uuid4"
+          title: "Account Id"
+        "branch_id":
+          type: "string"
+          format: "uuid4"
+          title: "Branch Id"
+        "org_invoice_number":
+          type: "integer"
+          title: "Org Invoice Number"
+        "description":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Description"
+        "total_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Total Amount"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "item_level_discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Item Level Discounted Amount"
+        "total_vat_amount":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Total Vat Amount"
+          description: "Total VAT amount calculated from products"
+        "total_price_excluding_vat":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Total Price Excluding Vat"
+          description: "Total price excluding VAT"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to the invoice"
+        "currency":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Currency"
+        "consumer_message":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Consumer Message"
+        "status": {"$ref": "#/components/schemas/InvoiceStatusEnum"}
+        "payment_method": {"$ref": "#/components/schemas/PaymentMethodEnum"}
+        "allowed_payment_flow": {"$ref": "#/components/schemas/PaymentFlow"}
+        "current_payment_flow":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentFlow"}
+            - type: "null"
+        "period_start":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Period Start"
+        "period_end":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Period End"
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurringInterval"}
+            - type: "null"
+        "recurring_interval_count":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Recurring Interval Count"
+        "type":
+          anyOf:
+            - {"$ref": "#/components/schemas/InvoiceType"}
+            - type: "null"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "user_id"
+        - "organization_id"
+        - "organization_consumer_id"
+        - "account_id"
+        - "branch_id"
+        - "org_invoice_number"
+        - "total_amount"
+        - "original_amount"
+        - "item_level_discounted_amount"
+        - "status"
+        - "payment_method"
+        - "allowed_payment_flow"
+      title: "InvoiceBase"
+    "InvoiceDetailed":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "user_id":
+          type: "string"
+          format: "uuid4"
+          title: "User Id"
+        "organization_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Id"
+        "organization_consumer_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Consumer Id"
+        "account_id":
+          type: "string"
+          format: "uuid4"
+          title: "Account Id"
+        "branch_id":
+          type: "string"
+          format: "uuid4"
+          title: "Branch Id"
+        "org_invoice_number":
+          type: "integer"
+          title: "Org Invoice Number"
+        "description":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Description"
+        "total_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Total Amount"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "item_level_discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Item Level Discounted Amount"
+        "total_vat_amount":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Total Vat Amount"
+          description: "Total VAT amount calculated from products"
+        "total_price_excluding_vat":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Total Price Excluding Vat"
+          description: "Total price excluding VAT"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to the invoice"
+        "currency":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Currency"
+        "consumer_message":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Consumer Message"
+        "status": {"$ref": "#/components/schemas/InvoiceStatusEnum"}
+        "payment_method": {"$ref": "#/components/schemas/PaymentMethodEnum"}
+        "allowed_payment_flow": {"$ref": "#/components/schemas/PaymentFlow"}
+        "current_payment_flow":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentFlow"}
+            - type: "null"
+        "period_start":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Period Start"
+        "period_end":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Period End"
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurringInterval"}
+            - type: "null"
+        "recurring_interval_count":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Recurring Interval Count"
+        "type":
+          anyOf:
+            - {"$ref": "#/components/schemas/InvoiceType"}
+            - type: "null"
+        "invoice_number":
+          type: "integer"
+          title: "Invoice Number"
+          description: "Global unique invoice number"
+        "remaining_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Remaining Amount"
+          description: "Remaining amount to be paid"
+        "paid_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Paid Amount"
+          description: "Total amount already paid"
+        "exclude_coupons_if_installments":
+          type: "boolean"
+          title: "Exclude Coupons If Installments"
+        "organization_consumer": {"$ref": "#/components/schemas/app__common__dtos__shared__OrganizationConsumer"}
+        "items":
+          items: {"$ref": "#/components/schemas/InvoiceItemDto"}
+          type: "array"
+          title: "Items"
+        "branch":
+          anyOf:
+            - {"$ref": "#/components/schemas/BranchDto"}
+            - type: "null"
+        "payments":
+          items: {"$ref": "#/components/schemas/PaymentDto"}
+          type: "array"
+          title: "Payments"
+        "subscription_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Subscription Id"
+        "subscription":
+          anyOf:
+            - {"$ref": "#/components/schemas/SubscriptionDetailed"}
+            - type: "null"
+        "payment_methods":
+          anyOf:
+            - {"$ref": "#/components/schemas/InvoicePaymentMethodDto"}
+            - type: "null"
+        "recurrence_pattern":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurrencePattern"}
+            - type: "null"
+          description: "Recurrence pattern for recurring invoices"
+        "parent_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Parent Id"
+          description: "Parent invoice ID for recurring invoices"
+        "custom_field_answers":
+          anyOf:
+            - additionalProperties: true
+              type: "object"
+            - type: "null"
+          title: "Custom Field Answers"
+        "url":
+          type: "string"
+          title: "Url"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "user_id"
+        - "organization_id"
+        - "organization_consumer_id"
+        - "account_id"
+        - "branch_id"
+        - "org_invoice_number"
+        - "total_amount"
+        - "original_amount"
+        - "item_level_discounted_amount"
+        - "status"
+        - "payment_method"
+        - "allowed_payment_flow"
+        - "invoice_number"
+        - "remaining_amount"
+        - "paid_amount"
+        - "exclude_coupons_if_installments"
+        - "organization_consumer"
+        - "items"
+        - "payments"
+        - "url"
+      title: "InvoiceDetailed"
+    "InvoiceItemDto":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "product_id":
+          type: "string"
+          format: "uuid4"
+          title: "Product Id"
+        "product": {"$ref": "#/components/schemas/ProductDto"}
+        "quantity":
+          type: "integer"
+          title: "Quantity"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discounted Amount"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to this item"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "product_id"
+        - "product"
+        - "quantity"
+        - "original_amount"
+        - "discounted_amount"
+      title: "InvoiceItemDto"
+    "InvoiceListFilters":
+      properties:
+        "include_payments":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Include Payments"
+          default: false
+        "payment_link_id":
+          anyOf:
+            - type: "string"
+              format: "uuid"
+            - type: "null"
+          title: "Payment Link Id"
+        "statuses":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/InvoiceStatusEnum"}
+              type: "array"
+            - type: "null"
+          title: "Statuses"
+        "payment_statuses":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/PaymentStatusEnum"}
+              type: "array"
+            - type: "null"
+          title: "Payment Statuses"
+          description: "Invoice includes payments with the following statuses"
+        "search_term":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Search Term"
+        "from_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "From Date"
+        "to_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "To Date"
+        "due_date_from":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Due Date From"
+          description: "Invoice's payment due date from this date onwards"
+        "due_date_to":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Due Date To"
+          description: "Invoice's payment due date to this date or older"
+        "from_price":
+          anyOf:
+            - type: "number"
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "From Price"
+        "to_price":
+          anyOf:
+            - type: "number"
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "To Price"
+        "organization_consumer_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Organization Consumer Id"
+        "subscription_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Subscription Id"
+      type: "object"
+      title: "InvoiceListFilters"
+    "InvoiceListItem":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "user_id":
+          type: "string"
+          format: "uuid4"
+          title: "User Id"
+        "organization_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Id"
+        "organization_consumer_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Consumer Id"
+        "account_id":
+          type: "string"
+          format: "uuid4"
+          title: "Account Id"
+        "branch_id":
+          type: "string"
+          format: "uuid4"
+          title: "Branch Id"
+        "org_invoice_number":
+          type: "integer"
+          title: "Org Invoice Number"
+        "description":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Description"
+        "total_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Total Amount"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "item_level_discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Item Level Discounted Amount"
+        "total_vat_amount":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Total Vat Amount"
+          description: "Total VAT amount calculated from products"
+        "total_price_excluding_vat":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Total Price Excluding Vat"
+          description: "Total price excluding VAT"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to the invoice"
+        "currency":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Currency"
+        "consumer_message":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Consumer Message"
+        "status": {"$ref": "#/components/schemas/InvoiceStatusEnum"}
+        "payment_method": {"$ref": "#/components/schemas/PaymentMethodEnum"}
+        "allowed_payment_flow": {"$ref": "#/components/schemas/PaymentFlow"}
+        "current_payment_flow":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentFlow"}
+            - type: "null"
+        "period_start":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Period Start"
+        "period_end":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Period End"
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurringInterval"}
+            - type: "null"
+        "recurring_interval_count":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Recurring Interval Count"
+        "type":
+          anyOf:
+            - {"$ref": "#/components/schemas/InvoiceType"}
+            - type: "null"
+        "remaining_amount":
+          anyOf:
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Remaining Amount"
+        "paid_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Paid Amount"
+        "organization_consumer": {"$ref": "#/components/schemas/app__common__dtos__shared__OrganizationConsumer"}
+        "subscription":
+          anyOf:
+            - {"$ref": "#/components/schemas/InvoiceListSubscrptionDto"}
+            - type: "null"
+        "payments":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/PaymentDto"}
+              type: "array"
+            - type: "null"
+          title: "Payments"
+        "total_number_of_payments":
+          type: "integer"
+          title: "Total Number Of Payments"
+          description: "Total number of payments for this invoice"
+        "last_payment_paid_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Last Payment Paid At"
+          description: "The date when the last payment was paid"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "user_id"
+        - "organization_id"
+        - "organization_consumer_id"
+        - "account_id"
+        - "branch_id"
+        - "org_invoice_number"
+        - "total_amount"
+        - "original_amount"
+        - "item_level_discounted_amount"
+        - "status"
+        - "payment_method"
+        - "allowed_payment_flow"
+        - "paid_amount"
+        - "organization_consumer"
+        - "total_number_of_payments"
+      title: "InvoiceListItem"
+    "InvoiceListSubscrptionDto":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "recurring_interval": {"$ref": "#/components/schemas/SubscriptionRecurringInterval"}
+        "recurring_interval_count":
+          type: "integer"
+          title: "Recurring Interval Count"
+        "status": {"$ref": "#/components/schemas/SubscriptionStatus"}
+        "current_period_start":
+          type: "string"
+          format: "date-time"
+          title: "Current Period Start"
+        "current_period_end":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Current Period End"
+        "cancel_at_period_end":
+          type: "boolean"
+          title: "Cancel At Period End"
+      type: "object"
+      required:
+        - "id"
+        - "recurring_interval"
+        - "recurring_interval_count"
+        - "status"
+        - "current_period_start"
+        - "cancel_at_period_end"
+      title: "InvoiceListSubscrptionDto"
+    "InvoicePaymentMethodDto":
+      properties:
+        "mada":
+          type: "boolean"
+          title: "Mada"
+          description: "mada is enabled"
+        "visa":
+          type: "boolean"
+          title: "Visa"
+          description: "visa is enabled"
+        "mastercard":
+          type: "boolean"
+          title: "Mastercard"
+          description: "mastercard is enabled"
+        "amex":
+          type: "boolean"
+          title: "Amex"
+          description: "amex is enabled"
+        "bank_transfer":
+          type: "boolean"
+          title: "Bank Transfer"
+          description: "bank_transfer is enabled"
+        "installment":
+          type: "boolean"
+          title: "Installment"
+          description: "installment is enabled"
+      type: "object"
+      required:
+        - "mada"
+        - "visa"
+        - "mastercard"
+        - "amex"
+        - "bank_transfer"
+        - "installment"
+      title: "InvoicePaymentMethodDto"
+    "InvoiceStatusEnum":
+      type: "string"
+      enum:
+        - "DRAFT"
+        - "CREATED"
+        - "SENT"
+        - "ACCEPTED"
+        - "REJECTED"
+        - "COMPLETED"
+        - "CANCELED"
+        - "EXPIRED"
+      title: "InvoiceStatusEnum"
+      description: "Invoice status enum representing the lifecycle/state of an invoice.\n\nStatus describes the current stage of an invoice in its lifecycle (DRAFT → CREATED → SENT → ACCEPTED → COMPLETED).\nThis changes over time as the invoice progresses. Different from InvoiceType which describes the payment structure."
+    "InvoiceType":
+      type: "string"
+      enum:
+        - "ONE_OFF"
+        - "ONE_OFF_FUTURE"
+        - "RECURRING"
+        - "INSTALLMENTS"
+      title: "InvoiceType"
+      description: "Invoice type enum representing the payment structure/pattern of an invoice.\n\nType describes how the invoice is structured for payments (ONE_OFF, RECURRING, INSTALLMENTS, etc.).\nThis is determined at invoice creation and typically doesn't change. Different from InvoiceStatusEnum\nwhich describes the current lifecycle state of the invoice."
+    "JsonValue": {}
+    "Language":
+      type: "string"
+      enum:
+        - "AR"
+        - "EN"
+      title: "Language"
+    "LastInvoiceActivity":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "org_invoice_number":
+          type: "integer"
+          title: "Org Invoice Number"
+        "subcription_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Subcription Id"
+      type: "object"
+      required:
+        - "id"
+        - "org_invoice_number"
+      title: "LastInvoiceActivity"
+    "ListResource_ConsumerResponse_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/ConsumerResponse"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[ConsumerResponse]"
+    "ListResource_CouponDetailed_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/CouponDetailed"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[CouponDetailed]"
+    "ListResource_FreezeSubscriptionBase_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/FreezeSubscriptionBase"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[FreezeSubscriptionBase]"
+    "ListResource_InvoiceListItem_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/InvoiceListItem"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[InvoiceListItem]"
+    "ListResource_PaymentLinkDetailed_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/PaymentLinkDetailed"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[PaymentLinkDetailed]"
+    "ListResource_ProductDto_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/ProductDto"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[ProductDto]"
+    "ListResource_SubscriptionDetailed_":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/SubscriptionDetailed"}
+          type: "array"
+          title: "Data"
+        "pagination": {"$ref": "#/components/schemas/Pagination"}
+      type: "object"
+      required:
+        - "data"
+        - "pagination"
+      title: "ListResource[SubscriptionDetailed]"
+    "Pagination":
+      properties:
+        "total_count":
+          type: "integer"
+          title: "Total Count"
+        "max_page":
+          type: "integer"
+          title: "Max Page"
+        "current_page":
+          type: "integer"
+          title: "Current Page"
+        "limit":
+          type: "integer"
+          title: "Limit"
+        "has_next_page":
+          type: "boolean"
+          title: "Has Next Page"
+        "has_previous_page":
+          type: "boolean"
+          title: "Has Previous Page"
+      type: "object"
+      required:
+        - "total_count"
+        - "max_page"
+        - "current_page"
+        - "limit"
+        - "has_next_page"
+        - "has_previous_page"
+      title: "Pagination"
+    "PaymentDto":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount"
+        "currency":
+          type: "string"
+          title: "Currency"
+        "scheduled_on":
+          type: "string"
+          format: "date-time"
+          title: "Scheduled On"
+        "invoice_payment_number":
+          type: "integer"
+          title: "Invoice Payment Number"
+        "type": {"$ref": "#/components/schemas/PaymentTypeEnum"}
+        "payment_method":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentMethod"}
+            - type: "null"
+        "current_status": {"$ref": "#/components/schemas/PaymentStatusEnum"}
+        "payed_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Payed At"
+        "settled_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Settled At"
+        "refunded_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Refunded At"
+        "pdf_link":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Pdf Link"
+        "paid_to_account_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Paid To Account Id"
+      type: "object"
+      required:
+        - "id"
+        - "amount"
+        - "currency"
+        - "scheduled_on"
+        - "invoice_payment_number"
+        - "type"
+        - "current_status"
+      title: "PaymentDto"
+    "PaymentFlow":
+      type: "string"
+      enum:
+        - "ALL"
+        - "AUTO"
+        - "MANUAL"
+      title: "PaymentFlow"
+    "PaymentLinkDetailed":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+        "description":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Description"
+        "amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "item_level_discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Item Level Discounted Amount"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to the payment link"
+        "currency":
+          type: "string"
+          title: "Currency"
+        "max_number_of_payments":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Max Number Of Payments"
+        "valid_until":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Valid Until"
+          description: "UTC datetime after which the payment link is no longer valid"
+        "confirmation_message":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Confirmation Message"
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/SubscriptionRecurringInterval"}
+            - type: "null"
+        "recurring_interval_count":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Recurring Interval Count"
+        "status": {"$ref": "#/components/schemas/PaymentLinkStatus"}
+        "organization_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Id"
+        "user_id":
+          type: "string"
+          format: "uuid4"
+          title: "User Id"
+        "organization_consumer_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Organization Consumer Id"
+        "deactivate_message":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Deactivate Message"
+        "custom_fields":
+          anyOf:
+            - additionalProperties: true
+              type: "object"
+            - type: "null"
+          title: "Custom Fields"
+        "success_redirect_url":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Success Redirect Url"
+        "failure_redirect_url":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Failure Redirect Url"
+        "custom_metadata":
+          anyOf:
+            - additionalProperties: {"$ref": "#/components/schemas/JsonValue"}
+              type: "object"
+            - type: "null"
+          title: "Custom Metadata"
+          description: "Custom key-value metadata to be sent to payment gateway and returned in webhooks"
+        "contact_information_type":
+          anyOf:
+            - {"$ref": "#/components/schemas/ContactInformationType"}
+            - type: "null"
+          description: "Type of contact information required for payment collection (PHONE or EMAIL)"
+        "items":
+          items: {"$ref": "#/components/schemas/PaymentLinkItemDto"}
+          type: "array"
+          title: "Items"
+        "coupons":
+          items: {"$ref": "#/components/schemas/CouponDto"}
+          type: "array"
+          title: "Coupons"
+        "override_payment_methods":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentMethodDto"}
+            - type: "null"
+        "url":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Url"
+        "amount_collected":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount Collected"
+          description: "Total amount collected from payments"
+          default: "0"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "name"
+        - "amount"
+        - "original_amount"
+        - "item_level_discounted_amount"
+        - "currency"
+        - "status"
+        - "organization_id"
+        - "user_id"
+        - "items"
+        - "coupons"
+      title: "PaymentLinkDetailed"
+    "PaymentLinkItemDto":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "product_id":
+          type: "string"
+          format: "uuid4"
+          title: "Product Id"
+        "quantity":
+          type: "integer"
+          title: "Quantity"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discounted Amount"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to this item"
+        "product": {"$ref": "#/components/schemas/ProductDto"}
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "product_id"
+        - "quantity"
+        - "original_amount"
+        - "discounted_amount"
+        - "product"
+      title: "PaymentLinkItemDto"
+    "PaymentLinkListFilters":
+      properties:
+        "statuses":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/PaymentLinkStatus"}
+              type: "array"
+            - type: "null"
+          title: "Statuses"
+          description: "Filter by subscription status"
+        "from_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "From Date"
+          description: "datetime is created_at"
+        "to_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "To Date"
+          description: "datetime is created_at"
+        "from_price":
+          anyOf:
+            - type: "number"
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "From Price"
+          description: "limit list by min payment link total amount inclusive"
+        "to_price":
+          anyOf:
+            - type: "number"
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "To Price"
+          description: "limit list by max payment link total amount inclusive"
+        "product_ids":
+          anyOf:
+            - items:
+                type: "string"
+                format: "uuid"
+              type: "array"
+              minItems: 1
+            - type: "null"
+          title: "Product Ids"
+          description: "Product ids that need to be in the list of payment links"
+      type: "object"
+      title: "PaymentLinkListFilters"
+    "PaymentLinkStatus":
+      type: "string"
+      enum:
+        - "INACTIVE"
+        - "ACTIVE"
+        - "COMPLETED"
+      title: "PaymentLinkStatus"
+    "PaymentListResponse":
+      properties:
+        "data":
+          items: {"$ref": "#/components/schemas/PaymentResponse"}
+          type: "array"
+          title: "Data"
+      type: "object"
+      required:
+        - "data"
+      title: "PaymentListResponse"
+    "PaymentMethod":
+      type: "string"
+      enum:
+        - "MADA"
+        - "MASTERCARD"
+        - "VISA"
+        - "APPLE_PAY"
+        - "AMEX"
+        - "CASH"
+        - "PGW_CARD_UNSPECIFIED"
+        - "BANK_TRANSFER"
+        - "CARD"
+        - "QURRAH"
+      title: "PaymentMethod"
+    "PaymentMethodDto":
+      properties:
+        "visa":
+          type: "boolean"
+          title: "Visa"
+          description: "visa is enabled"
+          default: false
+        "mastercard":
+          type: "boolean"
+          title: "Mastercard"
+          description: "mastercard is enabled"
+          default: false
+        "amex":
+          type: "boolean"
+          title: "Amex"
+          description: "amex is enabled"
+          default: false
+        "bank_transfer":
+          type: "boolean"
+          title: "Bank Transfer"
+          description: "bank_transfer is enabled"
+          default: false
+        "installment":
+          type: "boolean"
+          title: "Installment"
+          description: "installment is enabled"
+          default: false
+      type: "object"
+      title: "PaymentMethodDto"
+    "PaymentMethodEnum":
+      type: "string"
+      enum:
+        - "OPENBANKING"
+        - "PAYMENTGATEWAY"
+      title: "PaymentMethodEnum"
+    "PaymentRefundReason":
+      type: "string"
+      enum:
+        - "REQUESTED_BY_CUSTOMER"
+        - "DUPLICATE"
+        - "FRAUDLENT"
+        - "OTHER"
+      title: "PaymentRefundReason"
+    "PaymentRefundRequest":
+      properties:
+        "refund_reason": {"$ref": "#/components/schemas/PaymentRefundReason"}
+        "refund_note":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Refund Note"
+      type: "object"
+      required:
+        - "refund_reason"
+      title: "PaymentRefundRequest"
+    "PaymentResponse":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid"
+          title: "Id"
+        "amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount"
+        "scheduled_on":
+          type: "string"
+          title: "Scheduled On"
+        "type": {"$ref": "#/components/schemas/PaymentTypeEnum"}
+        "payment_method":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentMethod"}
+            - type: "null"
+        "current_status": {"$ref": "#/components/schemas/PaymentStatusEnum"}
+        "payed_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Payed At"
+        "refunded_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Refunded At"
+        "refund_reason":
+          anyOf:
+            - {"$ref": "#/components/schemas/PaymentRefundReason"}
+            - type: "null"
+        "refund_note":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Refund Note"
+      type: "object"
+      required:
+        - "id"
+        - "amount"
+        - "scheduled_on"
+        - "type"
+        - "current_status"
+      title: "PaymentResponse"
+    "PaymentStatusEnum":
+      type: "string"
+      enum:
+        - "PENDING"
+        - "PROCESSING"
+        - "FAILED_INITIATION"
+        - "SUCCEEDED"
+        - "FAILED"
+        - "CANCELED"
+        - "UNDER_REVIEW"
+        - "EXPIRED"
+        - "SETTLED"
+        - "REFUNDED"
+      title: "PaymentStatusEnum"
+    "PaymentTypeEnum":
+      type: "string"
+      enum:
+        - "INITIAL"
+        - "INSTALLMENT"
+      title: "PaymentTypeEnum"
+    "ProductCreate":
+      properties:
+        "name":
+          type: "string"
+          maxLength: 160
+          minLength: 1
+          title: "Name"
+          description: "Name of the product."
+        "description":
+          anyOf:
+            - type: "string"
+              maxLength: 500
+            - type: "null"
+          title: "Description"
+          description: "Description of the product."
+          default: ""
+        "price":
+          anyOf:
+            - type: "number"
+              minimum: 0
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Price"
+          description: "Price of the product."
+        "is_one_time":
+          type: "boolean"
+          title: "Is One Time"
+          description: "Will this product be used only one time in one invoice?"
+          default: false
+        "type": {"$ref": "#/components/schemas/ProductType", "description": "the type of product: one off or recurring"}
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurringInterval"}
+            - type: "null"
+          description: "Represents the billing cycle interval if product is recurring"
+        "recurring_interval_count":
+          type: "integer"
+          minimum: 1
+          title: "Recurring Interval Count"
+          description: "The billing cycle multiple if the product is recurring"
+          default: 1
+        "is_price_exempt_from_vat":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Price Exempt From Vat"
+          description: "Is the price exempt from VAT?"
+          default: false
+        "is_price_inclusive_of_vat":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Price Inclusive Of Vat"
+          description: "Is the price inclusive of VAT?"
+          default: true
+      type: "object"
+      required:
+        - "name"
+        - "price"
+        - "type"
+      title: "ProductCreate"
+    "ProductDto":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          maxLength: 160
+          minLength: 1
+          title: "Name"
+          description: "Name of the product."
+        "description":
+          anyOf:
+            - type: "string"
+              maxLength: 500
+            - type: "null"
+          title: "Description"
+          description: "Description of the product."
+          default: ""
+        "type": {"$ref": "#/components/schemas/ProductType", "description": "the type of product: one off or recurring"}
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurringInterval"}
+            - type: "null"
+          description: "Represents the billing cycle interval if product is recurring"
+        "recurring_interval_count":
+          type: "integer"
+          title: "Recurring Interval Count"
+          description: "The billing cycle multiple if the product is recurring"
+        "price":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Price"
+          description: "Total price including VAT."
+        "currency":
+          type: "string"
+          enum:
+            - "AED"
+            - "AFN"
+            - "ALL"
+            - "AMD"
+            - "ANG"
+            - "AOA"
+            - "ARS"
+            - "AUD"
+            - "AWG"
+            - "AZN"
+            - "BAM"
+            - "BBD"
+            - "BDT"
+            - "BGN"
+            - "BHD"
+            - "BIF"
+            - "BMD"
+            - "BND"
+            - "BOB"
+            - "BOV"
+            - "BRL"
+            - "BSD"
+            - "BTN"
+            - "BWP"
+            - "BYN"
+            - "BZD"
+            - "CAD"
+            - "CDF"
+            - "CHE"
+            - "CHF"
+            - "CHW"
+            - "CLF"
+            - "CLP"
+            - "CNY"
+            - "COP"
+            - "COU"
+            - "CRC"
+            - "CUC"
+            - "CUP"
+            - "CVE"
+            - "CZK"
+            - "DJF"
+            - "DKK"
+            - "DOP"
+            - "DZD"
+            - "EGP"
+            - "ERN"
+            - "ETB"
+            - "EUR"
+            - "FJD"
+            - "FKP"
+            - "GBP"
+            - "GEL"
+            - "GHS"
+            - "GIP"
+            - "GMD"
+            - "GNF"
+            - "GTQ"
+            - "GYD"
+            - "HKD"
+            - "HNL"
+            - "HRK"
+            - "HTG"
+            - "HUF"
+            - "IDR"
+            - "ILS"
+            - "INR"
+            - "IQD"
+            - "IRR"
+            - "ISK"
+            - "JMD"
+            - "JOD"
+            - "JPY"
+            - "KES"
+            - "KGS"
+            - "KHR"
+            - "KMF"
+            - "KPW"
+            - "KRW"
+            - "KWD"
+            - "KYD"
+            - "KZT"
+            - "LAK"
+            - "LBP"
+            - "LKR"
+            - "LRD"
+            - "LSL"
+            - "LYD"
+            - "MAD"
+            - "MDL"
+            - "MGA"
+            - "MKD"
+            - "MMK"
+            - "MNT"
+            - "MOP"
+            - "MRU"
+            - "MUR"
+            - "MVR"
+            - "MWK"
+            - "MXN"
+            - "MXV"
+            - "MYR"
+            - "MZN"
+            - "NAD"
+            - "NGN"
+            - "NIO"
+            - "NOK"
+            - "NPR"
+            - "NZD"
+            - "OMR"
+            - "PAB"
+            - "PEN"
+            - "PGK"
+            - "PHP"
+            - "PKR"
+            - "PLN"
+            - "PYG"
+            - "QAR"
+            - "RON"
+            - "RSD"
+            - "RUB"
+            - "RWF"
+            - "SAR"
+            - "SBD"
+            - "SCR"
+            - "SDG"
+            - "SEK"
+            - "SGD"
+            - "SHP"
+            - "SLE"
+            - "SLL"
+            - "SOS"
+            - "SRD"
+            - "SSP"
+            - "STN"
+            - "SVC"
+            - "SYP"
+            - "SZL"
+            - "THB"
+            - "TJS"
+            - "TMT"
+            - "TND"
+            - "TOP"
+            - "TRY"
+            - "TTD"
+            - "TWD"
+            - "TZS"
+            - "UAH"
+            - "UGX"
+            - "USD"
+            - "USN"
+            - "UYI"
+            - "UYU"
+            - "UYW"
+            - "UZS"
+            - "VED"
+            - "VES"
+            - "VND"
+            - "VUV"
+            - "WST"
+            - "XAF"
+            - "XCD"
+            - "XOF"
+            - "XPF"
+            - "XSU"
+            - "XUA"
+            - "YER"
+            - "ZAR"
+            - "ZMW"
+            - "ZWL"
+          maxLength: 3
+          minLength: 3
+          title: "Currency"
+          description: "Price currency of the product."
+          default: "SAR"
+        "is_active":
+          type: "boolean"
+          title: "Is Active"
+          description: "Can this product be used in invoices or subscriptions?"
+        "is_one_time":
+          type: "boolean"
+          title: "Is One Time"
+          description: "Shows if the product was created to be used once, and not to be added to product cataloge"
+        "is_price_exempt_from_vat":
+          type: "boolean"
+          title: "Is Price Exempt From Vat"
+          description: "Is the price exempt from VAT?"
+        "is_price_inclusive_of_vat":
+          type: "boolean"
+          title: "Is Price Inclusive Of Vat"
+          description: "Is the price inclusive of VAT?"
+        "price_excluding_vat":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Price Excluding Vat"
+          description: "Price excluding VAT."
+        "vat_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Vat Amount"
+          description: "VAT amount."
+        "is_used_in_finalized_invoice":
+          type: "boolean"
+          title: "Is Used In Finalized Invoice"
+          description: "Is the product used in a finalized invoice?"
+          default: false
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "name"
+        - "type"
+        - "recurring_interval_count"
+        - "price"
+        - "is_active"
+        - "is_one_time"
+        - "is_price_exempt_from_vat"
+        - "is_price_inclusive_of_vat"
+        - "price_excluding_vat"
+        - "vat_amount"
+      title: "ProductDto"
+    "ProductListFilters":
+      properties:
+        "search_term":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Search Term"
+          description: "Serach by product name or description."
+        "active":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Active"
+          description: "Filter by active or inactive product. Removing this flag will return all products."
+        "type":
+          anyOf:
+            - {"$ref": "#/components/schemas/ProductType"}
+            - type: "null"
+          description: "Filter by product type."
+      type: "object"
+      title: "ProductListFilters"
+    "ProductType":
+      type: "string"
+      enum:
+        - "RECURRING"
+        - "ONE_OFF"
+      title: "ProductType"
+    "ProductUpdate":
+      properties:
+        "name":
+          anyOf:
+            - type: "string"
+              maxLength: 160
+              minLength: 1
+            - type: "null"
+          title: "Name"
+          description: "Name of the product."
+        "description":
+          anyOf:
+            - type: "string"
+              maxLength: 500
+              minLength: 1
+            - type: "null"
+          title: "Description"
+          description: "Description of the product."
+        "price":
+          anyOf:
+            - type: "number"
+              minimum: 0
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "Price"
+          description: "Price of the product."
+        "is_active":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Active"
+          description: "Whether the product is active. If `true`, the product won't be available for purchase anymore. Existing customers will still have access to the product details in the invoice, and subscriptions will continue normally."
+        "type":
+          anyOf:
+            - {"$ref": "#/components/schemas/ProductType"}
+            - type: "null"
+          description: "the type of product: one off or recurring"
+        "recurring_interval":
+          anyOf:
+            - {"$ref": "#/components/schemas/RecurringInterval"}
+            - type: "null"
+          description: "Represents the billing cycle interval if product is recurring"
+        "recurring_interval_count":
+          anyOf:
+            - type: "integer"
+              minimum: 1
+            - type: "null"
+          title: "Recurring Interval Count"
+          description: "The billing cycle multiple if the product is recurring"
+        "is_price_exempt_from_vat":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Price Exempt From Vat"
+          description: "Is the price exempt from VAT?"
+          default: false
+        "is_price_inclusive_of_vat":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Price Inclusive Of Vat"
+          description: "Is the price inclusive of VAT?"
+          default: true
+      type: "object"
+      title: "ProductUpdate"
+    "RecurrencePattern":
+      type: "string"
+      enum:
+        - "Hour"
+        - "Day"
+        - "Week"
+        - "Fortnight"
+        - "Month"
+        - "Quarter"
+        - "Half-Year"
+        - "Year"
+      title: "RecurrencePattern"
+    "RecurringInterval":
+      type: "string"
+      enum:
+        - "WEEK"
+        - "MONTH"
+        - "SEMESTER"
+        - "YEAR"
+      title: "RecurringInterval"
+    "SubscriptionCancel":
+      properties:
+        "cancel_related_invoices":
+          type: "boolean"
+          title: "Cancel Related Invoices"
+          description: "Whether or not to cancel all the related invoices to this subscription. If False, only the subscription will be canceled but the related invoices will remain untouched."
+          default: false
+      type: "object"
+      title: "SubscriptionCancel"
+    "SubscriptionCreate":
+      properties:
+        "notify_consumer":
+          type: "boolean"
+          title: "Notify Consumer"
+          description: "send notification to consumer about subscription first invoice"
+          default: true
+        "description":
+          anyOf:
+            - type: "string"
+              maxLength: 500
+            - type: "null"
+          title: "Description"
+          description: "Description of the subscription."
+          default: ""
+        "items":
+          items: {"$ref": "#/components/schemas/SubscriptionItemCreateDto"}
+          type: "array"
+          minItems: 1
+          title: "Items"
+          description: "products to purchase."
+        "coupons":
+          anyOf:
+            - items:
+                type: "string"
+                format: "uuid4"
+              type: "array"
+            - type: "null"
+          title: "Coupons"
+          description: "coupons to apply to the subscription for discounts."
+          default: []
+        "organization_consumer_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Consumer Id"
+          description: "consumer who is going to subscribe"
+        "period_start":
+          type: "string"
+          format: "date-time"
+          title: "Period Start"
+          description: "starting date of first subscription cycle"
+        "until_cycle_number":
+          anyOf:
+            - type: "integer"
+              minimum: 1
+            - type: "null"
+          title: "Until Cycle Number"
+          description: "specify how many cycles the subscription will last for  until it moves to canceled state automatically"
+        "override_payment_methods":
+          anyOf:
+            - {"$ref": "#/components/schemas/SubscriptionPaymentMethodDto"}
+            - type: "null"
+          description: "overriden payment methods for generated invoices for the payer - sending 'null' for any value means we should follow organization global settings for that method"
+        "exclude_coupons_if_installments":
+          type: "boolean"
+          title: "Exclude Coupons If Installments"
+          description: "if enabled, all applied coupons on subscription level or item level will be excluded, and payer needs to pay full amount of the created invoice when they pay by installments."
+          default: false
+      type: "object"
+      required:
+        - "items"
+        - "organization_consumer_id"
+        - "period_start"
+      title: "SubscriptionCreate"
+    "SubscriptionDetailed":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "description":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Description"
+        "amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Amount"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "item_level_discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Item Level Discounted Amount"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to the subscription"
+        "remaining_days":
+          type: "integer"
+          title: "Remaining Days"
+        "currency":
+          type: "string"
+          title: "Currency"
+        "recurring_interval": {"$ref": "#/components/schemas/SubscriptionRecurringInterval"}
+        "recurring_interval_count":
+          type: "integer"
+          title: "Recurring Interval Count"
+        "status": {"$ref": "#/components/schemas/SubscriptionStatus"}
+        "current_period_start":
+          type: "string"
+          format: "date-time"
+          title: "Current Period Start"
+        "current_period_end":
+          type: "string"
+          format: "date-time"
+          title: "Current Period End"
+        "current_cycle_number":
+          type: "integer"
+          title: "Current Cycle Number"
+        "cancel_at_period_end":
+          type: "boolean"
+          title: "Cancel At Period End"
+        "cancel_at_cycle_number":
+          anyOf:
+            - type: "integer"
+            - type: "null"
+          title: "Cancel At Cycle Number"
+        "started_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Started At"
+        "ended_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Ended At"
+        "user_id":
+          type: "string"
+          format: "uuid4"
+          title: "User Id"
+        "organization_consumer_id":
+          type: "string"
+          format: "uuid4"
+          title: "Organization Consumer Id"
+        "latest_invoice_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Latest Invoice Id"
+        "organization_consumer":
+          anyOf:
+            - {"$ref": "#/components/schemas/app__subscription__v2__dtos__OrganizationConsumer"}
+            - type: "null"
+        "items":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/SubscriptionItemDto"}
+              type: "array"
+            - type: "null"
+          title: "Items"
+        "latest_invoice":
+          anyOf:
+            - {"$ref": "#/components/schemas/InvoiceBase"}
+            - type: "null"
+        "latest_freeze":
+          anyOf:
+            - {"$ref": "#/components/schemas/FreezeSubscriptionBase"}
+            - type: "null"
+        "override_payment_methods":
+          anyOf:
+            - {"$ref": "#/components/schemas/SubscriptionPaymentMethodDto"}
+            - type: "null"
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "amount"
+        - "original_amount"
+        - "item_level_discounted_amount"
+        - "remaining_days"
+        - "currency"
+        - "recurring_interval"
+        - "recurring_interval_count"
+        - "status"
+        - "current_period_start"
+        - "current_period_end"
+        - "current_cycle_number"
+        - "cancel_at_period_end"
+        - "user_id"
+        - "organization_consumer_id"
+      title: "SubscriptionDetailed"
+    "SubscriptionItemCreateDto":
+      properties:
+        "product_id":
+          type: "string"
+          format: "uuid4"
+          title: "Product Id"
+        "quantity":
+          type: "integer"
+          exclusiveMinimum: 0
+          title: "Quantity"
+          description: "Quantity must be greater than 0"
+        "coupons":
+          anyOf:
+            - items:
+                type: "string"
+                format: "uuid4"
+              type: "array"
+            - type: "null"
+          title: "Coupons"
+          description: "coupons to apply to this specific item for discounts."
+          default: []
+      type: "object"
+      required:
+        - "product_id"
+        - "quantity"
+      title: "SubscriptionItemCreateDto"
+    "SubscriptionItemDto":
+      properties:
+        "created_at":
+          type: "string"
+          format: "date-time"
+          title: "Created At"
+          description: "Creation timestamp of the object."
+        "updated_at":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Updated At"
+          description: "Last modification timestamp of the object."
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "product_id":
+          type: "string"
+          format: "uuid4"
+          title: "Product Id"
+        "subscription_id":
+          type: "string"
+          format: "uuid4"
+          title: "Subscription Id"
+        "quantity":
+          type: "integer"
+          title: "Quantity"
+        "original_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Original Amount"
+        "discounted_amount":
+          type: "string"
+          pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+          title: "Discounted Amount"
+        "coupon_calculation_metadata":
+          anyOf:
+            - {"$ref": "#/components/schemas/CouponCalculationMetadataDto"}
+            - type: "null"
+          description: "Metadata about how coupons were applied to this item"
+        "product": {"$ref": "#/components/schemas/ProductDto"}
+      type: "object"
+      required:
+        - "created_at"
+        - "updated_at"
+        - "id"
+        - "product_id"
+        - "subscription_id"
+        - "quantity"
+        - "original_amount"
+        - "discounted_amount"
+        - "product"
+      title: "SubscriptionItemDto"
+    "SubscriptionListFilters":
+      properties:
+        "statuses":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/SubscriptionStatus"}
+              type: "array"
+            - type: "null"
+          title: "Statuses"
+          description: "Filter by subscription status"
+        "latest_invoice_is_paid":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Latest Invoice Is Paid"
+          description: "Filter subscriptions based on if their latest invoice is paid or partially paid"
+        "from_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "From Date"
+          description: "datetime is created_at"
+        "to_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "To Date"
+          description: "datetime is created_at"
+        "current_period_start_from_date":
+          anyOf:
+            - type: "string"
+              format: "date-time"
+            - type: "null"
+          title: "Current Period Start From Date"
+          description: "datetime is current_period_start"
+        "from_price":
+          anyOf:
+            - type: "number"
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "From Price"
+          description: "limit list by min subscription amount inclusive"
+        "to_price":
+          anyOf:
+            - type: "number"
+            - type: "string"
+              pattern: "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$"
+            - type: "null"
+          title: "To Price"
+          description: "limit list by max subscription amount inclusive"
+        "organization_consumer_id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Organization Consumer Id"
+          description: "filter subscriptions that belongs to organization consumer"
+        "search_term":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Search Term"
+          description: "Serach by product name or description."
+        "product_ids":
+          anyOf:
+            - items:
+                type: "string"
+                format: "uuid"
+              type: "array"
+              minItems: 1
+            - type: "null"
+          title: "Product Ids"
+          description: "Product ids that need to be in the list of subscriptions"
+      type: "object"
+      title: "SubscriptionListFilters"
+    "SubscriptionPaymentMethodDto":
+      properties:
+        "visa":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Visa"
+          description: "override visa from global settings"
+        "mastercard":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Mastercard"
+          description: "override mastercard from global settings"
+        "amex":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Amex"
+          description: "override amex from global settings"
+        "bank_transfer":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Bank Transfer"
+          description: "override bank_transfer from global settings"
+        "installment":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Installment"
+          description: "override installment from global settings"
+        "subscription_auto_renewal":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Subscription Auto Renewal"
+          description: "Override organization's subscription auto renewal setting. If True, subscription will auto-renew at the end of each period. If False, subscription will be canceled at the end of the current period. If None (default), uses organization's subscription_auto_renewal setting."
+      type: "object"
+      title: "SubscriptionPaymentMethodDto"
+    "SubscriptionRecurringInterval":
+      type: "string"
+      enum:
+        - "WEEK"
+        - "MONTH"
+        - "QUARTER"
+        - "YEAR"
+      title: "SubscriptionRecurringInterval"
+    "SubscriptionStatus":
+      type: "string"
+      enum:
+        - "INACTIVE"
+        - "ACTIVE"
+        - "EXPIRED"
+        - "CANCELED"
+        - "FROZEN"
+      title: "SubscriptionStatus"
+    "SubscriptionUpdate":
+      properties:
+        "description":
+          anyOf:
+            - type: "string"
+              maxLength: 500
+            - type: "null"
+          title: "Description"
+          description: "Description of the subscription."
+        "items":
+          items: {"$ref": "#/components/schemas/SubscriptionItemCreateDto"}
+          type: "array"
+          minItems: 1
+          title: "Items"
+          description: "products to purchaseIf you want to keep existing items, include them in the list."
+        "coupons":
+          items:
+            type: "string"
+            format: "uuid4"
+          type: "array"
+          title: "Coupons"
+          description: "coupons to apply to the subscription for discounts.If you want to keep existing coupons, include them in the list."
+        "until_cycle_number":
+          anyOf:
+            - type: "integer"
+              minimum: 1
+            - type: "null"
+          title: "Until Cycle Number"
+          description: "specify how many cycles the subscription will last for  until it moves to canceled state automatically. Sending 'null' will cancel it."
+        "override_payment_methods":
+          anyOf:
+            - {"$ref": "#/components/schemas/SubscriptionPaymentMethodDto"}
+            - type: "null"
+          description: "overriden payment methods for generated invoices for the payer - sending 'null' for any value means we should follow organization global settings for that method"
+      type: "object"
+      required:
+        - "items"
+        - "coupons"
+      title: "SubscriptionUpdate"
+    "ValidationError":
+      properties:
+        "loc":
+          items:
+            anyOf:
+              - type: "string"
+              - type: "integer"
+          type: "array"
+          title: "Location"
+        "msg":
+          type: "string"
+          title: "Message"
+        "type":
+          type: "string"
+          title: "Error Type"
+      type: "object"
+      required:
+        - "loc"
+        - "msg"
+        - "type"
+      title: "ValidationError"
+    "app__common__dtos__shared__Consumer":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+        "email":
+          anyOf:
+            - type: "string"
+              format: "email"
+            - type: "null"
+          title: "Email"
+        "preferred_language": {"$ref": "#/components/schemas/Language"}
+      type: "object"
+      required:
+        - "id"
+        - "preferred_language"
+      title: "Consumer"
+    "app__common__dtos__shared__OrganizationConsumer":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+        "alias":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Alias"
+        "email":
+          anyOf:
+            - type: "string"
+              format: "email"
+            - type: "null"
+          title: "Email"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+        "preferred_language": {"$ref": "#/components/schemas/Language"}
+        "consumer":
+          anyOf:
+            - {"$ref": "#/components/schemas/app__common__dtos__shared__Consumer"}
+            - type: "null"
+        "is_deleted":
+          anyOf:
+            - type: "boolean"
+            - type: "null"
+          title: "Is Deleted"
+          default: false
+        "communication_methods":
+          anyOf:
+            - items: {"$ref": "#/components/schemas/ConsumerCommunicationMethod"}
+              type: "array"
+            - type: "null"
+          title: "Communication Methods"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+        - "preferred_language"
+      title: "OrganizationConsumer"
+    "app__consumer__v2__dtos__Consumer":
+      properties:
+        "id":
+          anyOf:
+            - type: "string"
+              format: "uuid4"
+            - type: "null"
+          title: "Id"
+        "phone_number":
+          anyOf:
+            - type: "string"
+              format: "phone"
+            - type: "null"
+          title: "Phone Number"
+        "preferred_language":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Preferred Language"
+      type: "object"
+      title: "Consumer"
+    "app__subscription__v2__dtos__OrganizationConsumer":
+      properties:
+        "id":
+          type: "string"
+          format: "uuid4"
+          title: "Id"
+        "name":
+          type: "string"
+          title: "Name"
+        "alias":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Alias"
+        "email":
+          anyOf:
+            - type: "string"
+            - type: "null"
+          title: "Email"
+      type: "object"
+      required:
+        - "id"
+        - "name"
+      title: "OrganizationConsumer"
+  securitySchemes:
+    "JWTBearer":
+      type: "http"
+      scheme: "bearer"
+    "APIKey":
+      type: "apiKey"
+      in: "header"
+      name: "x-api-key"

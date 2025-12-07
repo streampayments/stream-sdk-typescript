@@ -1,0 +1,24 @@
+# SubscriptionListFilters
+
+## Example Usage
+
+```typescript
+import { SubscriptionListFilters } from "stream-sdk/models";
+
+let value: SubscriptionListFilters = {};
+```
+
+## Fields
+
+| Field                                                                                         | Type                                                                                          | Required                                                                                      | Description                                                                                   |
+| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `statuses`                                                                                    | [models.SubscriptionStatus](../models/subscriptionstatus.md)[]                                | :heavy_minus_sign:                                                                            | Filter by subscription status                                                                 |
+| `latestInvoiceIsPaid`                                                                         | *boolean*                                                                                     | :heavy_minus_sign:                                                                            | Filter subscriptions based on if their latest invoice is paid or partially paid               |
+| `fromDate`                                                                                    | [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) | :heavy_minus_sign:                                                                            | datetime is created_at                                                                        |
+| `toDate`                                                                                      | [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) | :heavy_minus_sign:                                                                            | datetime is created_at                                                                        |
+| `currentPeriodStartFromDate`                                                                  | [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) | :heavy_minus_sign:                                                                            | datetime is current_period_start                                                              |
+| `fromPrice`                                                                                   | *models.SubscriptionListFiltersFromPrice*                                                     | :heavy_minus_sign:                                                                            | limit list by min subscription amount inclusive                                               |
+| `toPrice`                                                                                     | *models.SubscriptionListFiltersToPrice*                                                       | :heavy_minus_sign:                                                                            | limit list by max subscription amount inclusive                                               |
+| `organizationConsumerId`                                                                      | *string*                                                                                      | :heavy_minus_sign:                                                                            | filter subscriptions that belongs to organization consumer                                    |
+| `searchTerm`                                                                                  | *string*                                                                                      | :heavy_minus_sign:                                                                            | Serach by product name or description.                                                        |
+| `productIds`                                                                                  | *string*[]                                                                                    | :heavy_minus_sign:                                                                            | Product ids that need to be in the list of subscriptions                                      |

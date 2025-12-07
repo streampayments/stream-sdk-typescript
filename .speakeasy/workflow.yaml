@@ -1,0 +1,21 @@
+workflowVersion: 1.0.0
+speakeasyVersion: latest
+sources:
+    Stream App:
+        inputs:
+            - location: ../../../../Desktop/api.json
+        overlays:
+            - location: .speakeasy/speakeasy-modifications-overlay.yaml
+        output: .speakeasy/out.openapi.yaml
+        registry:
+            location: registry.speakeasyapi.dev/stream/stream/stream-app
+targets:
+    stream-sdk:
+        target: typescript
+        source: Stream App
+        codeSamples:
+            registry:
+                location: registry.speakeasyapi.dev/stream/stream/stream-app-typescript-code-samples
+            labelOverride:
+                fixedValue: Typescript (SDK)
+            blocking: false
