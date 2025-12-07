@@ -3,7 +3,7 @@ generation:
   devContainers:
     enabled: true
     schemaPath: .speakeasy/out.openapi.yaml
-  sdkClassName: StreamSdk
+  sdkClassName: StreamSDK
   maintainOpenAPIOrder: true
   usageSnippets:
     optionalPropertyRendering: withExample
@@ -31,7 +31,7 @@ generation:
     generateNewTests: true
     skipResponseBodyAssertions: false
 typescript:
-  version: 0.1.1
+  version: 0.1.2
   acceptHeaderEnum: false
   additionalDependencies:
     dependencies: {}
@@ -40,7 +40,7 @@ typescript:
   additionalPackageJSON: {}
   additionalScripts: {}
   alwaysIncludeInboundAndOutbound: false
-  author: Speakeasy
+  author: Stream
   baseErrorName: StreamSDKError
   clientServerStatusCodesAsErrors: true
   constFieldsAlwaysOptional: false

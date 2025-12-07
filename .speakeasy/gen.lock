@@ -5,12 +5,12 @@ management:
   docVersion: "2"
   speakeasyVersion: 1.669.2
   generationVersion: 2.772.0
-  releaseVersion: 0.1.1
-  configChecksum: f36a16b60304372bb872a06a58c2149d
+  releaseVersion: 0.1.2
+  configChecksum: fcf0e7ab87a8fd411aed030eb86c5aa5
 persistentEdits:
-  generation_id: 1c561904-673f-40d2-96b8-a6e9afd2da89
-  pristine_commit_hash: 8bbf497422d0ca86100dcf9c2891f3a992e2f7f0
-  pristine_tree_hash: f6d073db392b181e4295516227c9e48b3cca9b7c
+  generation_id: b4020236-6a9d-480f-a68f-9e5850551e41
+  pristine_commit_hash: a032a77f76e1633e06bc24458cd2a4bb45e876ac
+  pristine_tree_hash: c69fd8abe6ac1fbac2969838befe46d9b75fa208
 features:
   typescript:
     additionalDependencies: 0.1.0
@@ -719,12 +719,12 @@ trackedFiles:
     pristine_git_object: dc34faab84eef5860f4465671bf7ae3246d55b96
   jsr.json:
     id: 7f6ab7767282
-    last_write_checksum: sha1:e44561d97ab34a0bf90536497377b454282ef995
-    pristine_git_object: ecb1c726a8cb2a3ad849c7f3544fd8132f56dad4
+    last_write_checksum: sha1:49c20c2af8fdaa93c248a3dd205fe04f67bfcbcd
+    pristine_git_object: d5a096771ced1c2863c3f585f84c11493fab7a01
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:2b6044168b939ef0658f7b04211b412b05e383fe
-    pristine_git_object: d12a752496b44454948fc402c100429cb4876d51
+    last_write_checksum: sha1:09035884c7a88f509899edf6bee8e8117e7c17f9
+    pristine_git_object: 75188c3e8bd51db909ca0618f7f74722fad0bb8d
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:bfffcbe44fdb6cbda1698d32b29c054651f01a1b
@@ -975,8 +975,8 @@ trackedFiles:
     pristine_git_object: 44be0eae8246521b230e8e711a88eff738fc015d
   src/lib/config.ts:
     id: 320761608fb3
-    last_write_checksum: sha1:f42e7c3ce5f29d47474e01b82b312b5f372bd7d3
-    pristine_git_object: 3a21e291d7f57d27ca79c28a454a0a5c44eb1c3c
+    last_write_checksum: sha1:c316e99073c8bb4e6556198d13326f7d1d3e283d
+    pristine_git_object: 5790e6de4e3eed432d41c0aa82aac5d826481104
   src/lib/dlv.ts:
     id: b1988214835a
     last_write_checksum: sha1:1dd3e3fbb4550c4bf31f5ef997faff355d6f3250

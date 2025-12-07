@@ -1,7 +1,7 @@
 {
   "name": "stream-sdk",
-  "version": "0.1.1",
-  "author": "Speakeasy",
+  "version": "0.1.2",
+  "author": "Stream",
   "type": "module",
   "tshy": {
     "sourceDialects": [
